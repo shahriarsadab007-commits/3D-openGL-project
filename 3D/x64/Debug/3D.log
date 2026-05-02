@@ -1,0 +1,14 @@
+﻿  main.cpp
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(459,70): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(460,70): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(461,70): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(462,70): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(463,70): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(464,70): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(466,66): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(467,66): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(468,66): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(469,66): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(470,66): warning C4305: '+=': truncation from 'double' to 'float'
+C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\main.cpp(471,66): warning C4305: '-=': truncation from 'double' to 'float'
+  3D.vcxproj -> C:\Users\aslam\Downloads\GLFW GLAD Installation Using Visual Studio 2022\3D\x64\Debug\3D.exe
