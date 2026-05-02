@@ -26,7 +26,6 @@ void processInput(GLFWwindow* window);
 void drawBox(Shader& shader, unsigned int VAO, glm::vec3 position, glm::vec3 size, glm::vec3 color);
 void drawClassroom(Shader& shader, unsigned int VAO);
 void drawTableAndChair(Shader& shader, unsigned int VAO);
-void drawStudentDeskAndChair(Shader& shader, unsigned int VAO, float posX, float posZ);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -210,27 +209,8 @@ int main()
         // draw classroom wall, board and floor
         drawClassroom(ourShader, VAO);
 
-        // draw teacher's table and chair
+        // draw table and chair in the middle
         drawTableAndChair(ourShader, VAO);
-
-        // ── STUDENT GRID: 4 columns x 3 rows ─────────────────
-        //
-        // Floor now spans Z: -6 to +8 (center shifted to Z=1).
-        // Columns at X = -3.5, -1.5, +1.5, +3.5
-        //   → 2.75 unit wall margin each side, 1.5 unit center aisle
-        // Rows at Z = 1.5, 3.5, 5.5
-        //   → all chairs (at Z+0.85) stay within Z = +8
-
-        float colX[4] = { -3.5f, -1.5f, 1.5f, 3.5f };
-        float rowZ[3] = { 1.5f,  3.5f, 5.5f };
-
-        for (int r = 0; r < 3; r++)
-        {
-            for (int c = 0; c < 4; c++)
-            {
-                drawStudentDeskAndChair(ourShader, VAO, colX[c], rowZ[r]);
-            }
-        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -270,8 +250,8 @@ void drawBox(Shader& shader, unsigned int VAO, glm::vec3 position, glm::vec3 siz
 
 /*
     Classroom base:
-    - Floor (14 wide x 14 deep, center shifted to Z=1.0 so floor spans Z: -6 to +8)
-    - Front wall (shifted back to Z = -6.0 to match floor edge)
+    - Floor (expanded to 14 wide x 12 deep)
+    - Front wall (shifted back to match new floor edge at Z = -6)
     - Blackboard on wall
 */
 void drawClassroom(Shader& shader, unsigned int VAO)
@@ -293,16 +273,17 @@ void drawClassroom(Shader& shader, unsigned int VAO)
     glm::vec3 boardFrameColor = glm::vec3(0.35f, 0.22f, 0.10f);
     glm::vec3 trayColor = glm::vec3(0.60f, 0.60f, 0.60f);
 
-    // floor — 14 wide x 14 deep, center at Z=1.0 → spans Z: -6 to +8
+    // floor — expanded from 8x7 to 14x12
+    // X: -7 to +7     Z: -6 to +6
     drawBox(
         shader,
         VAO,
-        glm::vec3(0.0f, -0.05f, 1.0f),
-        glm::vec3(14.0f, 0.10f, 14.0f),
+        glm::vec3(0.0f, -0.05f, 0.0f),
+        glm::vec3(14.0f, 0.10f, 12.0f),
         floorColor
     );
 
-    // front wall — at Z = -6.0 to sit on the floor edge
+    // front wall — shifted back to Z = -6.0 to sit on the new floor edge
     drawBox(
         shader,
         VAO,
@@ -367,7 +348,10 @@ void drawClassroom(Shader& shader, unsigned int VAO)
 }
 
 /*
-    Teacher's table and chair — unchanged from original.
+    Table and chair:
+    - Kept in the middle of the room
+    - Chair is behind the table
+    - Both face the front wall / board
 */
 void drawTableAndChair(Shader& shader, unsigned int VAO)
 {
@@ -377,6 +361,10 @@ void drawTableAndChair(Shader& shader, unsigned int VAO)
 
     glm::vec3 chairSeatColor = glm::vec3(0.30f, 0.16f, 0.08f);
     glm::vec3 chairLegColor = glm::vec3(0.20f, 0.10f, 0.04f);
+
+    // -------------------------
+    // TABLE IN THE MIDDLE
+    // -------------------------
 
     // table top
     drawBox(
@@ -388,10 +376,41 @@ void drawTableAndChair(Shader& shader, unsigned int VAO)
     );
 
     // table legs
-    drawBox(shader, VAO, glm::vec3(-0.85f, 0.55f, -0.55f), glm::vec3(0.16f, 1.10f, 0.16f), tableLegColor);
-    drawBox(shader, VAO, glm::vec3(0.85f, 0.55f, -0.55f), glm::vec3(0.16f, 1.10f, 0.16f), tableLegColor);
-    drawBox(shader, VAO, glm::vec3(-0.85f, 0.55f, 0.55f), glm::vec3(0.16f, 1.10f, 0.16f), tableLegColor);
-    drawBox(shader, VAO, glm::vec3(0.85f, 0.55f, 0.55f), glm::vec3(0.16f, 1.10f, 0.16f), tableLegColor);
+    drawBox(
+        shader,
+        VAO,
+        glm::vec3(-0.85f, 0.55f, -0.55f),
+        glm::vec3(0.16f, 1.10f, 0.16f),
+        tableLegColor
+    );
+
+    drawBox(
+        shader,
+        VAO,
+        glm::vec3(0.85f, 0.55f, -0.55f),
+        glm::vec3(0.16f, 1.10f, 0.16f),
+        tableLegColor
+    );
+
+    drawBox(
+        shader,
+        VAO,
+        glm::vec3(-0.85f, 0.55f, 0.55f),
+        glm::vec3(0.16f, 1.10f, 0.16f),
+        tableLegColor
+    );
+
+    drawBox(
+        shader,
+        VAO,
+        glm::vec3(0.85f, 0.55f, 0.55f),
+        glm::vec3(0.16f, 1.10f, 0.16f),
+        tableLegColor
+    );
+
+    // -------------------------
+    // CHAIR IN FRONT OF BOARD
+    // -------------------------
 
     // chair seat
     drawBox(shader, VAO, glm::vec3(0.0f, 0.62f, -1.4f), glm::vec3(1.0f, 0.22f, 0.95f), chairSeatColor);
@@ -406,64 +425,6 @@ void drawTableAndChair(Shader& shader, unsigned int VAO)
 
     // backrest
     drawBox(shader, VAO, glm::vec3(0.0f, 1.15f, -1.90f), glm::vec3(1.0f, 1.15f, 0.16f), chairSeatColor);
-}
-
-/*
-    One student desk + chair at world position (posX, posZ).
-
-    The desk is slightly smaller than the teacher's (1.5 x 0.9 vs 2.0 x 1.35).
-    The chair sits behind the desk (at posZ + 0.85) so the student
-    faces the board at negative Z.
-
-    Call this in a loop to fill the room with rows and columns.
-*/
-void drawStudentDeskAndChair(Shader& shader, unsigned int VAO, float posX, float posZ)
-{
-    // colors — slightly lighter than teacher's desk to visually distinguish
-    glm::vec3 deskTopColor = glm::vec3(0.55f, 0.32f, 0.14f);
-    glm::vec3 deskLegColor = glm::vec3(0.32f, 0.18f, 0.08f);
-    glm::vec3 chairSeatColor = glm::vec3(0.38f, 0.20f, 0.09f);
-    glm::vec3 chairLegColor = glm::vec3(0.25f, 0.12f, 0.05f);
-
-    // ── DESK ─────────────────────────────────────────────────
-
-    // desk top  (1.5 wide x 0.9 deep x 0.15 thick)
-    drawBox(shader, VAO,
-        glm::vec3(posX, 0.95f, posZ),
-        glm::vec3(1.5f, 0.15f, 0.90f),
-        deskTopColor);
-
-    // desk legs — offset inward from desk edges
-    float lx = 0.58f;
-    float lz = 0.32f;
-    drawBox(shader, VAO, glm::vec3(posX - lx, 0.45f, posZ - lz), glm::vec3(0.12f, 0.90f, 0.12f), deskLegColor);
-    drawBox(shader, VAO, glm::vec3(posX + lx, 0.45f, posZ - lz), glm::vec3(0.12f, 0.90f, 0.12f), deskLegColor);
-    drawBox(shader, VAO, glm::vec3(posX - lx, 0.45f, posZ + lz), glm::vec3(0.12f, 0.90f, 0.12f), deskLegColor);
-    drawBox(shader, VAO, glm::vec3(posX + lx, 0.45f, posZ + lz), glm::vec3(0.12f, 0.90f, 0.12f), deskLegColor);
-
-    // ── CHAIR (behind desk, student faces board) ──────────────
-
-    float chairZ = posZ + 0.85f;
-
-    // chair seat  (0.85 wide x 0.70 deep x 0.18 thick)
-    drawBox(shader, VAO,
-        glm::vec3(posX, 0.55f, chairZ),
-        glm::vec3(0.85f, 0.18f, 0.70f),
-        chairSeatColor);
-
-    // chair legs
-    float clx = 0.30f;
-    float clz = 0.26f;
-    drawBox(shader, VAO, glm::vec3(posX - clx, 0.25f, chairZ - clz), glm::vec3(0.10f, 0.50f, 0.10f), chairLegColor);
-    drawBox(shader, VAO, glm::vec3(posX + clx, 0.25f, chairZ - clz), glm::vec3(0.10f, 0.50f, 0.10f), chairLegColor);
-    drawBox(shader, VAO, glm::vec3(posX - clx, 0.25f, chairZ + clz), glm::vec3(0.10f, 0.50f, 0.10f), chairLegColor);
-    drawBox(shader, VAO, glm::vec3(posX + clx, 0.25f, chairZ + clz), glm::vec3(0.10f, 0.50f, 0.10f), chairLegColor);
-
-    // chair backrest  (0.85 wide x 0.75 tall x 0.12 thick)
-    drawBox(shader, VAO,
-        glm::vec3(posX, 0.95f, chairZ + 0.35f),
-        glm::vec3(0.85f, 0.75f, 0.12f),
-        chairSeatColor);
 }
 
 // process all input
